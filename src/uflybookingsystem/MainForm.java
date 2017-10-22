@@ -13,6 +13,12 @@ public class MainForm extends javax.swing.JFrame {
     public MainForm() {
         initComponents();
         this.setResizable(false);
+        CompanyColors.setFrameColor(this);
+        
+        CompanyColors.setButtons(btnBookingForm);
+        CompanyColors.setButtons(btnImportForm);
+        CompanyColors.setButtons(btnClose);
+        CompanyColors.setLabelColor(lblTitle);     
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

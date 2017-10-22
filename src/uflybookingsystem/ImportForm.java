@@ -4,6 +4,8 @@
 package uflybookingsystem;
 
 import Imports.BaseImporter;
+import Imports.Eng.AirportCodes;
+import Imports.Eng.FlightNumbers;
 import Imports.FlightImporter;
 import Imports.LocationImporter;
 import java.io.InputStream;
@@ -18,6 +20,15 @@ public class ImportForm extends javax.swing.JFrame {
     InputStream in = null;
     public ImportForm() {
         initComponents();
+        CompanyColors.setButtons(btnClose);
+        CompanyColors.setButtons(btnBrowseLocation);
+        CompanyColors.setButtons(btnBrowseFlight);
+        CompanyColors.setButtons(btnImportLocations);
+        CompanyColors.setButtons(btnImportFlights);
+        CompanyColors.setLabelColor(jLabel1);
+        CompanyColors.setLabelColor(jLabel2);
+        CompanyColors.setLabelColor(jLabel3);
+        CompanyColors.setFrameColor(this);
         this.setResizable(false);
     }
 
@@ -105,16 +116,15 @@ public class ImportForm extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(btnImportFlights, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtFlights, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(txtFlights, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnImportFlights, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnBrowseFlight))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnImportLocations)
                                     .addComponent(txtLocations, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
+                                    .addComponent(jLabel2)
+                                    .addComponent(btnImportLocations, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnBrowseLocation)))))
                 .addContainerGap(39, Short.MAX_VALUE))
@@ -172,6 +182,7 @@ public class ImportForm extends javax.swing.JFrame {
     //and calls it's run() method
     //Then the ImportFeedbackForm instance is created and displayed to see the result of the import
     private void btnImportLocationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportLocationsActionPerformed
+        AirportCodes.addLocation(txtLocations.getText());
         LocationImporter locationImporter = new LocationImporter(
                 txtLocations.getText());
         locationImporter.run();
@@ -184,6 +195,7 @@ public class ImportForm extends javax.swing.JFrame {
     //and calls it's run() method
     //Then the ImportFeedbackForm instance is created and displayed to see the result of the import
     private void btnImportFlightsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportFlightsActionPerformed
+        FlightNumbers.addFlightNumbers(txtFlights.getText());
         FlightImporter flightImporter = new FlightImporter(
                 txtFlights.getText());
         flightImporter.run();

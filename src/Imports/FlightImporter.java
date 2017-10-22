@@ -101,7 +101,7 @@ public class FlightImporter extends BaseImporter {
     return content;
 }
     public void checkForUpdates(String[] content){
-    //content is single line of the file
+    DatabaseOperations.checkNonExistingFlights();
     Extractions ext = new Extractions(content);   
     if(DatabaseOperations.getFlightByFlightNumber(
             ext.pullFlightNumber()) == null){
@@ -124,6 +124,8 @@ public class FlightImporter extends BaseImporter {
         ConvertPlane.convertPlaneEnum(ext.pullPlane()),Integer.parseInt(
                 ext.pullSeatsTaken()))
         );
+        System.out.println("UPDATING: "+ext.pullFlightNumber()+
+        ext.pullDeparturePort()+ext.pullDestinationPort());
     }
 
 }
@@ -154,19 +156,19 @@ public class FlightImporter extends BaseImporter {
         }
         catch(FileNotFoundException fnf){
             super.getResult().getErrorMessages().add(lineNo+": "+
-                    fnf.getStackTrace());
+                    fnf.getStackTrace()+"\n"+fnf.getMessage());
             super.getResult().incrementFailedRows();
             System.out.println(fnf.getMessage());
         }
         catch(IOException ioe){
             super.getResult().getErrorMessages().add(lineNo+": "+
-                    ioe.getStackTrace());
+                    ioe.getStackTrace()+"\n"+ioe.getMessage());
             super.getResult().incrementFailedRows();
             System.out.println(ioe.getMessage());
         }
         catch(Exception e){
             super.getResult().getErrorMessages().add(lineNo+": "+
-                    e.getStackTrace());
+                    e.getStackTrace()+"\n"+e.getMessage());
             super.getResult().incrementFailedRows();
         }
     }

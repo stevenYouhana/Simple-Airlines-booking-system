@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import uflybookingsystem.MessageBox;
 
 public class AirportCodes {
     static ArrayList<String> airportCodes = new ArrayList();
@@ -17,10 +18,14 @@ public class AirportCodes {
     public AirportCodes(){
        
     }
-    //REMOVE HARDCODE
     public static ArrayList<String> getCurrentAirportCodes(){
+        return airportCodes;
+        
+    }
+    public static void addLocation(String filePath){
+        airportCodes.clear();
         try(BufferedReader locations = new BufferedReader(
-                new FileReader("../Locations.txt"))){
+                new FileReader(filePath))){
             int c = 0;
             String airportCode = "";
             while((c = locations.read()) != -1){
@@ -33,8 +38,8 @@ public class AirportCodes {
             }
         }
         catch(IOException ioe){
-            System.out.println("gettingCurrentCodes: "+ioe.getMessage());
-        }
-        return airportCodes;
+            MessageBox.msg("File Path issue", ioe.getMessage(), javax.swing.
+                    JOptionPane.ERROR_MESSAGE);       
+        }        
     }
 }

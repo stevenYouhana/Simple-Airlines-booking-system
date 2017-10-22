@@ -37,7 +37,9 @@ public class DatabaseOperations {
             }
         }
         catch(SQLException sqle){
-            Print.ln(sqle.getMessage());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
         }
         return locations;
     }
@@ -58,7 +60,9 @@ public class DatabaseOperations {
             }
         }
         catch(SQLException sqle){
-            Print.ln(sqle.getMessage());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
         }
         return flights;
     }
@@ -103,7 +107,9 @@ public class DatabaseOperations {
             }
         }
         catch(SQLException sqle){
-             System.out.println("getFlightByFLightNumber(): "+sqle.toString());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
         }
         return null;
     }
@@ -122,7 +128,9 @@ public class DatabaseOperations {
             }
         }
         catch(SQLException sqle){
-            System.out.println("getLocationByCode(): "+sqle.toString());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
         }  
         return null;
     }
@@ -139,7 +147,9 @@ public class DatabaseOperations {
             statement.executeUpdate(sql);
         }
         catch(SQLException sqle){
-            System.out.println("AddLocation(): "+sqle.toString());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
         } 
     }
      
@@ -165,13 +175,63 @@ public class DatabaseOperations {
             statement.executeUpdate(sql);
         }
         catch(SQLException sqle){
-            System.out.println("AddFlight(): "+sqle.toString());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
         }
     }
 
     //this method updates the location to the one passed to it as a parameter where the airport codes are matching
     public static void UpdateLocation(Location location){
         System.out.println("UPDATEING LOCATIONS");
+        try(Connection connection = DbConnector.connectToDb()){
+            Statement statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM location"
+                    + " WHERE AirportCode = '"+location.getAirportCode()+"';");
+            resultSet.absolute(1);
+            resultSet.updateString("City", location.getCity());  
+            resultSet.updateRow();
+            System.out.println("Updated Location to "+location.getCity());
+        }
+        catch(SQLException sqle){
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
+        }
+    }
+    public static void checkNonExistingFlights(){
+        String chkSql = "SELECT FlightNumber FROM flight";
+        try(Connection connection = DbConnector.connectToDb();
+            Statement chkStatement = connection.createStatement();
+            ResultSet rs = chkStatement.executeQuery(chkSql)){
+            while(rs.next()){
+                if(!(FlightNumbers.getCurrentFlightNumbers().contains(
+                        rs.getString("FlightNumber")))){                       
+                    try(Connection connection2 = DbConnector.connectToDb()){
+                    Statement delStmnt = connection2.createStatement(ResultSet.
+                            TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+                    ResultSet delRs = delStmnt.executeQuery("SELECT * FROM flight"
+                            + " WHERE FlightNumber = '"+rs.getString("FlightNumber")+
+                            "';");
+                    delRs.first();
+                    delRs.deleteRow();
+                    }
+                    catch(SQLException sqle){
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
+                    }
+                }
+            }  
+        }
+        catch(SQLException sqle){
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
+        }
+    }
+    public static void checkNonExistingLocations(){
         String chkSql = "SELECT AirportCode FROM location";
         try (Connection connection = DbConnector.connectToDb();
             Statement chkStatement = connection.createStatement();
@@ -190,57 +250,23 @@ public class DatabaseOperations {
                     delRs.deleteRow();
                     }
                     catch(SQLException sqle){
-                        System.out.println("DELETING----------"+sqle.getMessage());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
                     }
                 }
             }
         }
         catch(SQLException sqle){
-            System.out.println("CheckStmt AddLocation(): "+sqle.getMessage());
-        }
-        try(Connection connection = DbConnector.connectToDb()){
-            Statement statement = connection.createStatement(
-                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM location"
-                    + " WHERE AirportCode = '"+location.getAirportCode()+"';");
-            resultSet.absolute(1);
-            resultSet.updateString("City", location.getCity());  
-            resultSet.updateRow();
-            System.out.println("Updated Location to "+location.getCity());
-        }
-        catch(SQLException sqle){
-            System.out.println("UpdateLocation() "+sqle.getMessage());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
         }
     }
-    
     //this method updates the flight to the one passed to it as a parameter where the flight numbers are matching
     public static void UpdateFlight(Flight flight){
         System.out.println("UPDATEING FLIGHTS");
         String chkSql = "SELECT FlightNumber FROM flight";
-        try (Connection connection = DbConnector.connectToDb();
-            Statement chkStatement = connection.createStatement();
-            ResultSet rs = chkStatement.executeQuery(chkSql)){
-            while(rs.next()){
-                if(!(FlightNumbers.getCurrentFlightNumbers().contains(
-                        rs.getString("FlightNumber")))){                       
-                    try(Connection connection2 = DbConnector.connectToDb()){
-                    Statement delStmnt = connection2.createStatement(ResultSet.
-                            TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-                    ResultSet delRs = delStmnt.executeQuery("SELECT * FROM flight"
-                            + " WHERE FlightNumber = '"+rs.getString("FlightNumber")+
-                            "';");
-                    delRs.first();
-                    delRs.deleteRow();
-                    }
-                    catch(SQLException sqle){
-                        System.out.println(sqle.getMessage());
-                    }
-                }
-            }
-        }
-        catch(SQLException sqle){
-            System.out.println(sqle.getMessage());
-        }
         try(Connection connection = DbConnector.connectToDb()){
             Statement statement = connection.createStatement(
                 ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -260,7 +286,9 @@ public class DatabaseOperations {
             System.out.println("Updated Flights");
         }
         catch(SQLException sqle){
-            System.out.println("UpdateFlight() "+sqle.getMessage());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
         }
     }
 
@@ -301,7 +329,9 @@ public class DatabaseOperations {
             return flights;
         }
         catch(SQLException sqle){
-            System.out.println(sqle.getMessage());
+            MessageBox.msg("SQL Error", sqle.getMessage()+"\n"+
+                    sqle.getStackTrace().toString(), javax.swing.JOptionPane.
+                            ERROR_MESSAGE);
         }
         return null;
     }

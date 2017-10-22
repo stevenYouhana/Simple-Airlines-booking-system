@@ -156,6 +156,7 @@ public class LocationImporter extends BaseImporter {
         return null;
     }
     public void checkForUpdates(String[] content){
+        DatabaseOperations.checkNonExistingLocations();
         for(String c : content){
             if(!(c.isEmpty())){
                 if(DatabaseOperations.getLocationByAirportCode(extractCode(c))
@@ -205,19 +206,19 @@ public class LocationImporter extends BaseImporter {
         }
         catch(FileNotFoundException fnf){
             super.getResult().getErrorMessages().add(lineNo+": "+
-                    fnf.getStackTrace());
+                    fnf.getStackTrace()+"\n"+fnf.getMessage());
             super.getResult().incrementFailedRows();
             System.out.println("FNF----"+fnf.getMessage());
         }
         catch(IOException ioe){
             super.getResult().getErrorMessages().add(lineNo+": "+
-                    ioe.getStackTrace());
+                    ioe.getStackTrace()+"\n"+ioe.getMessage());
             super.getResult().incrementFailedRows();
             System.out.println("IOE----"+ioe.getMessage());
         }
         catch(Exception e){
             super.getResult().getErrorMessages().add(lineNo+": "+
-                    e.getStackTrace());
+                    e.getStackTrace()+"\n"+e.getMessage());
             super.getResult().incrementFailedRows();
             System.out.println("e-----"+e.getMessage());
         }

@@ -37,19 +37,17 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                                      <Component id="btnImportFlights" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                                      <Component id="txtFlights" min="-2" pref="363" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="txtFlights" alignment="0" min="-2" pref="363" max="-2" attributes="0"/>
+                                  <Component id="btnImportFlights" alignment="0" min="-2" pref="181" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnBrowseFlight" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btnImportLocations" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="txtLocations" alignment="0" min="-2" pref="363" max="-2" attributes="0"/>
                                   <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnImportLocations" alignment="0" min="-2" pref="177" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnBrowseLocation" min="-2" max="-2" attributes="0"/>

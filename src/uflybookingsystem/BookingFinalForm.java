@@ -6,6 +6,7 @@ package uflybookingsystem;
 import BusinessObject.Booking;
 import Imports.Eng.ConvertPlane;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
 
 
 public class BookingFinalForm extends javax.swing.JFrame {
@@ -19,6 +20,15 @@ public class BookingFinalForm extends javax.swing.JFrame {
      */
     public BookingFinalForm(Booking booking) {
         initComponents();
+        CompanyColors.setButtons(btnBook);
+        CompanyColors.setButtons(btnClose);
+        CompanyColors.setFrameColor(this);
+        CompanyColors.setLabelColor(jLabel2);
+        CompanyColors.setLabelColor(jLabel4);
+        CompanyColors.setLabelColor(jLabel5);
+        CompanyColors.setLabelColor(lblTitle);
+        CompanyColors.setComboboxColor(cboQuantity);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
         this.booking = booking;
         lblFlight.setText(booking.getFlight().getFlightNo());
@@ -58,6 +68,7 @@ public class BookingFinalForm extends javax.swing.JFrame {
             model.addElement("No tickets available for this flight");
             btnBook.setEnabled(false);
         }
+        System.out.println("seats update: "+booking.getFlight().getSeatsTaken());
         cboQuantity.setModel(model);
     }
     
@@ -211,6 +222,8 @@ public class BookingFinalForm extends javax.swing.JFrame {
     //The message is displayed that the booking was added successfuly
     private void btnBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBookActionPerformed
         booking.setFlightNo(booking.getFlight().getFlightNo());
+//        booking.getFlight().setSeatsTaken(booking.getFlight().getSeatsTaken()+
+//                Integer.parseInt(cboQuantity.getSelectedItem().toString()));
         booking.setPrice(getClassPrice()+getInsurancePrice());
         booking.setQuantity(Integer.parseInt(
                 cboQuantity.getSelectedItem().toString()));
@@ -222,6 +235,15 @@ public class BookingFinalForm extends javax.swing.JFrame {
         DatabaseOperations.UpdateFlight(booking.getFlight());
         MessageBox.msg("Booking","Booking added succesfully",
                 javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        if(cboQuantity.getSelectedItem().toString().equals("12")){
+            model = new DefaultComboBoxModel();
+            model.removeAllElements();
+            model.addElement("Maximum tickets purchased");
+            cboQuantity.setModel(model);
+        }
+        else{
+            createQuantityModel();
+        }
     }//GEN-LAST:event_btnBookActionPerformed
 
     //action for closing the form

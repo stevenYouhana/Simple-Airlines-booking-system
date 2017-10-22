@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import uflybookingsystem.MessageBox;
 
 public class FlightNumbers {
     static ArrayList<String> flightNumbers = new ArrayList();
@@ -15,24 +16,27 @@ public class FlightNumbers {
     public FlightNumbers(){
         
     }
-    //REMOVE HARD CODE
     public static ArrayList<String> getCurrentFlightNumbers(){
-        try(BufferedReader flights = new BufferedReader(
-                new FileReader("../Flights.txt"))){
+        return flightNumbers;
+    }
+    public static void addFlightNumbers(String filePath){
+        flightNumbers.clear();
+        try(BufferedReader inputFile = new BufferedReader(
+                new FileReader(filePath))){
             int c = 0;
-            String flightNumber = "";
-            while((c = flights.read()) != -1){
-                flightNumber += (char)c;
+            String line = "";
+            while((c = inputFile.read()) != -1){
+                line += (char)c;
             }
-            for(int i=flightNumber.length(); i>-1; i--){
-                if(i>5 && flightNumber.substring(i-5,i).matches("[NZ]+\\d{3}")){
-                    flightNumbers.add(flightNumber.substring(i-5,i));
+            for(int i=line.length(); i>-1; i--){
+                if(i>5 && line.substring(i-5,i).matches("[NZ]+\\d{3}")){
+                    flightNumbers.add(line.substring(i-5,i));
                 }
             }
         }
         catch(IOException ioe){
-            System.out.println("getCurrentFlightNumbers: "+ioe.getMessage());
+            MessageBox.msg("File Path issue", ioe.getMessage(), javax.swing.
+                    JOptionPane.ERROR_MESSAGE);
         }
-        return flightNumbers;
     }
 }

@@ -5,6 +5,7 @@ package uflybookingsystem;
 
 import Imports.BaseImporter;
 import Imports.ImportResult;
+import javax.swing.JFrame;
 
 
 
@@ -16,6 +17,14 @@ public class ImportFeedbackForm extends javax.swing.JFrame {
      */
     public ImportFeedbackForm(ImportResult result) {
         initComponents();
+        CompanyColors.setButtons(btnClose);
+        CompanyColors.setFrameColor(this);
+        CompanyColors.setLabelColor(jLabel1);
+        CompanyColors.setLabelColor(jLabel2);
+        CompanyColors.setLabelColor(jLabel3);
+        CompanyColors.setLabelColor(lblTitle);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
         this.setResizable(false);
         this.txtOutput.setEditable(false);
         lblTotalRows.setText(String.valueOf(result.getTotalRows()));
